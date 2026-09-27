@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block contents %}
+
+<div class="card p-3">
+
+    <p>閲覧したいレシピを選んでください:</p>
+
+    <form method="GET" action="{{ url_for('index') }}">
+        <input
+            type="text"
+            name="keyword"
+            value="{{ keyword }}"
+            placeholder="料理名・食材で検索"
+            class="input"
+        >
+
+        <select name="sort" class="input">
+            <option value="title">料理名順</option>
+            <option value="easy_asc">難易度が低い順</option>
+            <option value="easy_desc">難易度が高い順</option>
+        </select>
+
+        <input type="submit" value="検索・並び替え" class="button is-info">
+        <a href="{{ url_for('index') }}" class="button">クリア</a>
+    </form>
+
+    <p>
+        <a href="{{ url_for('memo', id=0) }}" class="button is-primary">
+            ＋ 新規作成
+        </a>
+    </p>
+
+    {% if items %}
+        <ul class="grid">
+            {% for it in items %}
+                <li class="cell card p-4 m-2">
+                    <a href="{{ url_for('memo', id=it.id) }}">
+                        🥄 {{ it.title }}
+                        <br>
+                        難易度：{{ "★" * it.easy }}{{ "☆" * (5 - it.easy) }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>該当するレシピはありません。</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

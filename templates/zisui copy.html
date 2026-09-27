@@ -1,0 +1,38 @@
+<!-- base.html を拡張する -->
+{% extends "base.html" %}
+<!-- base.html の contents を書き換える -->
+{% block contents %}
+<div class="card p-3">
+    <form method="POST">
+        <label class="label" for="title">料理名:</label>
+        <input id="title" name="title" type="text"
+            value="{{ it.title }}" class="input">
+
+        <label class="label" for="recipe">レシピ:</label>
+        <textarea id="recipe" name="recipe"
+            class="textarea">{{ it.recipe }}</textarea>
+        
+        <label class="label" for="food">食材:</label>
+        <textarea id="food" name="food"
+            class="textarea">{{ it.food }}</textarea>
+
+        <label class="label" for="easy">難易度:</label>
+        <select id="easy" name="easy" class="input">
+            <option value="1" {% if it.easy == 1 %}selected{% endif %}> 1 (簡単)</option>
+            <option value="2" {% if it.easy == 2 %}selected{% endif %}> 2 </option>
+            <option value="3" {% if it.easy == 3 %}selected{% endif %}> 3 </option>
+            <option value="4" {% if it.easy == 4 %}selected{% endif %}> 4 </option>
+            <option value="5" {% if it.easy == 5 %}selected{% endif %}> 5 (難しい)</option>
+        </select>
+        <br>
+        <input type="submit" value=" 保存 " class="button is-primary">
+    </form>
+        
+    {% if it.id %}
+    <form method="POST" action="{{ url_for('delete_memo', id=it.id) }}" style="margin-top: 10px;">
+        <input type="submit" value=" 削除 " class="button is-danger">
+    </form>
+    {% endif %}
+    
+</div>
+{% endblock %}

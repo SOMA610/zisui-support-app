@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+
+    <title>自炊支援アプリ</title>
+
+    <style>
+        body {
+            min-height: 100vh;
+            background-color: #f5f5f5;
+        }
+
+        .app-header {
+            margin-bottom: 12px;
+        }
+
+        .main-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .recipe-list {
+            padding: 0;
+            list-style: none;
+        }
+
+        .recipe-card {
+            margin-bottom: 12px;
+        }
+
+        .textarea {
+            min-height: 160px;
+            resize: vertical;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-keyword {
+            flex: 1 1 250px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .main-content {
+                padding: 0 12px;
+            }
+
+            .search-form .input,
+            .search-form .select,
+            .search-form .button {
+                width: 100%;
+            }
+        }
+        .recipe-item {
+            list-style: none;
+            margin-bottom: 12px;
+        }
+
+        .recipe-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 16px 20px;
+            background-color: #ffffff;
+            border: 1px solid #dbdbdb;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+
+            color: #363636;
+            text-decoration: none;
+        }
+
+        .recipe-link:hover {
+            background-color: #f0f8ff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+        }
+
+        .recipe-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .recipe-easy {
+            white-space: nowrap;
+            color: #3273dc;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="hero is-info app-header">
+        <div class="hero-body py-2">
+            <div class="container has-text-centered">
+                <h1 class="title as-text-white has-text-weight-bold">自炊支援アプリ</h1>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        {% block contents %}
+        <!-- ここに各ページの内容が表示される -->
+        {% endblock %}
+    </main>
+</body>
+</html>
