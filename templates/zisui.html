@@ -88,6 +88,21 @@
 
         </form>
 
+        {% if it.id %}
+
+        <form
+            method="POST"
+            action="{{ url_for('add_to_shopping', id=it.id) }}"
+            class="mt-4"
+        >
+            <input
+                type="submit"
+                value="食材を買い物リストに追加"
+                class="button is-info"
+            >
+        </form>
+        {% endif %}
+
         <!-- 削除用フォーム -->
         {% if it.id %}
         <form

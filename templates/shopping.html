@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block contents %}
+
+<div style="display: flex; gap: 12px; flex-wrap: wrap;" class="mb-4">
+
+    <a href="{{ url_for('index') }}" class="button is-info">
+        ← レシピ一覧に戻る
+    </a>
+
+    <form
+        method="POST"
+        action="{{ url_for('clear_shopping') }}"
+        onsubmit="return confirm('買い物リストをすべて削除しますか？');"
+    >
+        <button type="submit" class="button is-danger is-light">
+            買い物リストを空にする
+        </button>
+    </form>
+
+</div>
+<!-- 食材を手動で追加するフォーム -->
+<form
+    method="POST"
+    action="{{ url_for('add_shopping_manual') }}"
+    class="mb-4"
+>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+
+        <input
+            type="text"
+            name="name"
+            class="input"
+            placeholder="追加したい食材を入力"
+            required
+            style="flex: 1; min-width: 180px;"
+        >
+
+        <button type="submit" class="button is-primary">
+            ＋ 追加
+        </button>
+
+    </div>
+</form>
+
+    {% if items %}
+
+        <ul class="recipe-list">
+            {% for item in items %}
+                <li class="recipe-item">
+                    <form
+                        method="POST"
+                        action="{{ url_for('check_shopping', id=item.id) }}"
+                        style="display: flex; align-items: center; gap: 8px;"
+                    >
+                        <button
+                            type="submit"
+                            class="button is-white"
+                        >
+                            {% if item.checked %}
+                                ☑
+                            {% else %}
+                                □
+                            {% endif %}
+                        </button>
+
+                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+
+                            {% if item.checked %}
+                                <span style="text-decoration: line-through; color: gray;">
+                            {{ item.name }}
+                                </span>
+                            {% else %}
+                                <span>{{ item.name }}</span>
+                            {% endif %}
+
+                            <button
+                                type="submit"
+                                formaction="{{ url_for('delete_shopping', id=item.id) }}"
+                                formmethod="POST"
+                                formnovalidate
+                                class="button is-danger is-small"
+                            >
+                                削除
+                            </button>
+
+                        </div>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+
+    {% else %}
+
+        <p>買い物リストは空です。</p>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

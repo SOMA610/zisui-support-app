@@ -12,6 +12,10 @@ class MemoItem(db.Model):
     recipe = db.Column(db.Text, nullable=False)
     food = db.Column(db.Text, nullable=False)
     easy = db.Column(db.Integer, nullable=False, default=5)
+class ShoppingItem(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Text, nullable=False)
+    checked = db.Column(db.Boolean, default=False)
 
 with app.app_context():
     db.create_all()
@@ -70,6 +74,7 @@ def memo(id: int):
 
     return render_template("zisui.html", it=it)
 
+
 @app.route("/memo/<int:id>/delete",methods=["POST"])
 def delete_memo(id: int):  #作成したメモの削除機能
     it = MemoItem.query.get(id)
@@ -78,6 +83,79 @@ def delete_memo(id: int):  #作成したメモの削除機能
     db.session.delete(it)
     db.session.commit()
     return redirect(url_for("index"))
+
+@app.route("/shopping/add/<int:id>", methods=["POST"])
+def add_to_shopping(id: int):
+    it = MemoItem.query.get(id)
+
+    if it is None:
+        return redirect(url_for("index"))
+
+    for line in it.food.splitlines():
+
+        line = line.strip()
+
+        if line == "":
+            continue
+
+        if "：" in line:
+            name = line.split("：", 1)[0].strip()
+        else:
+            name = line
+
+        shopping_item = ShoppingItem(name=name)
+        db.session.add(shopping_item)
+
+    db.session.commit()
+
+    return redirect(url_for("shopping"))
+
+@app.route("/shopping/check/<int:id>", methods=["POST"])
+def check_shopping(id: int):
+    item = db.session.get(ShoppingItem, id)
+
+    if item is not None:
+        item.checked = not item.checked
+        db.session.commit()
+
+    return redirect(url_for("shopping"))
+
+@app.route("/shopping/delete/<int:id>", methods=["POST"])
+def delete_shopping(id: int):
+    item = db.session.get(ShoppingItem, id)
+
+    if item is not None:
+        db.session.delete(item)
+        db.session.commit()
+
+    return redirect(url_for("shopping"))
+
+@app.route("/shopping/clear", methods=["POST"])
+def clear_shopping():
+    ShoppingItem.query.delete()
+    db.session.commit()
+
+    return redirect(url_for("shopping"))
+
+@app.route("/shopping")
+def shopping():
+    items = ShoppingItem.query.all()
+    return render_template("shopping.html", items=items)
+
+@app.route("/shopping/add-manual", methods=["POST"])
+def add_shopping_manual():
+
+    name = request.form.get("name", "").strip()
+
+    if name == "":
+        return redirect(url_for("shopping"))
+
+    item = ShoppingItem(name=name, checked=False)
+
+    db.session.add(item)
+    db.session.commit()
+
+    return redirect(url_for("shopping"))
 
 if __name__ == "__main__":
     app.run(debug=True, port=8888)
